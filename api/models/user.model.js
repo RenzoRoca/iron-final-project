@@ -4,6 +4,7 @@ const Schema = mongoose.Schema
 const EMAIL_PATTERN = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_PATTERN = /^.{8,}$/;
 const bcrypt = require('bcrypt');
+const Message = require('./message.model');
 
 const userSchema = new Schema({
     userName: {
@@ -52,6 +53,12 @@ const userSchema = new Schema({
             return `https://i.pravatar.cc/150?u=${this.id}`
         }
     },
+    messages: {
+        type: [{
+            type: String,
+            ref: 'Message'            
+        }]
+    }
 }, {
     timestamps: true,
     toJSON: {
@@ -64,26 +71,17 @@ const userSchema = new Schema({
             delete ret.totpSecret;
             return ret
         }
-    },
-    toObject: {
-        virtuals: true,
-        transform: (doc, ret) => {
-            ret.id = doc._id;
-            delete ret._id;
-            delete ret.__v;
-            delete ret.password;
-            delete ret.totpSecret;
-            return ret
-        }
     }
 })
 
+/*
 userSchema.virtual('messages', {
     ref: 'Message',
     localField: '_id',
     foreignField: 'user.messages',
     justOne: false,
 });
+*/
 
 userSchema.virtual('ads', {
     ref: 'Ad',

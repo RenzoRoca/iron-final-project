@@ -10,7 +10,7 @@ const adSchema = new Schema({
     },
     description: String,
     author: {
-        type: String,
+        type: Schema.Types.ObjectId,
         ref: User,
         default: null
     },
@@ -19,8 +19,17 @@ const adSchema = new Schema({
         default: true
     },
     applied: {
-        type: Array,
-        default: []
+        type: [{
+            type: String,
+            ref: 'User',
+            unique: true
+        }]
+    },
+    results: {
+        type: [{
+            type: String,
+            ref: 'Result'
+        }]
     }
 });
 

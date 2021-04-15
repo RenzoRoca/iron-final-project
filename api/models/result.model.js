@@ -1,22 +1,22 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
-const User = require('user.model');
-const Ad = require('ad.model');
+const User = require('./user.model');
+const Ad = require('./ad.model');
 
 const resultSchema = new Schema({
     ad: {
-        type: String,
+        type: Schema.Types.ObjectId,
         ref: Ad,
         default: null
     },
     contentCreator: {
-        type: String,
-        ref: 'User',
+        type: Schema.Types.ObjectId,
+        ref: User,
         default: null
     },
     company: {
-        type: String,
-        ref: 'User',
+        type: Schema.Types.ObjectId,
+        ref: User,
         default: null
     },
     earnings: Number,

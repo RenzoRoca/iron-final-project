@@ -1,5 +1,6 @@
 const createError = require('http-errors');
 const User = require('../models/user.model');
+const Message = require('../models/message.model');
 const passport = require('passport');
 
 module.exports.list = (req, res, next) => {
@@ -65,6 +66,23 @@ module.exports.totp = (req, res, next) => {
     }
 
     next(createError(400, 'invalid TOTP'))
+}
+
+module.exports.receivedMessages = (req, res, next) => {
+
+  User.find(req.user.id).populate({
+    path: 'message',
+    match: { 
+      match: { mention: { $eq: req.user.id } }
+    }})
+    .then(userMessages => {
+      if (userMessages) {
+        Message.find()
+        res.status(200).json(userMessages)
+      } else {
+        next(createError(404, 'Ad not found'));
+      } 
+    }).catch(next)
 }
 
 module.exports.logout = (req, res, next) => {

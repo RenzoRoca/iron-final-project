@@ -1,16 +1,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
-const User = require('user.model');
+const User = require('./user.model');
 
 const messageSchema = new Schema({
     text: {
         type: String,
         required: 'A text is required',
-        unique: true
     },
-    description: String,
     author: {
-        type: String,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         default: null
     },
@@ -18,12 +16,18 @@ const messageSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    mention: User,
-    read: boolean
-
+    mention: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        default: null
+    },
+    read: {
+        type: Boolean,
+        default: false
+    }
 })
 
-userSchema.virtual('messages', {
+messageSchema.virtual('messages', {
     ref: 'Message',
     localField: '_id',
     foreignField: 'ad.messages',
