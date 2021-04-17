@@ -31,7 +31,7 @@ function App() {
             <Route exact path="/404" component={() => <Error code={404} />} />
             <Route exact path="/403" component={() => <Error code={403} />} />
 
-            <Redirect to="/ads" />
+            <Redirect to="/register" />
           </Switch>
         </div>
         <Footer/>

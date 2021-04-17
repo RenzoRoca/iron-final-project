@@ -19,10 +19,9 @@ function Navbar() {
 
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-lg">
       <div className="container">
-        <Link className="navbar-brand" to="/events">
-          <img src={logo} alt="Logo" width="30" height="24" className="d-inline-block align-middle" />
+        <Link className="navbar-brand text-white" to="/ads">
           {t('Navbar.title')}
         </Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,13 +29,13 @@ function Navbar() {
         </button>
         <div className="collapse navbar-collapse" id="main-navbar">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item"><NavLink className="nav-link" activeClassName="active" to="/events">{t('Navbar.events')}</NavLink></li>
+            <li className="nav-item"><NavLink className="nav-link text-white" activeClassName="active" to="/ads">{t('Navbar.ads')}</NavLink></li>
           </ul>
           <ul className="navbar-nav d-flex">
             {!isAuthenticated() && (
               <Fragment>
-                <li className="nav-item"><NavLink className="nav-link" activeClassName="active" to="/login">{t('Navbar.login')}</NavLink></li>
-                <li className="nav-item"><NavLink className="nav-link" activeClassName="active" to="/register">{t('Navbar.register')}</NavLink></li>
+                <li className="nav-item"><NavLink className="nav-link text-white" activeClassName="active" to="/login">{t('Navbar.login')}</NavLink></li>
+                <li className="nav-item"><NavLink className="nav-link text-white" activeClassName="active" to="/register">{t('Navbar.register')}</NavLink></li>
               </Fragment>
             )}
             {isAuthenticated() && (

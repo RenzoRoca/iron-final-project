@@ -1,9 +1,8 @@
 
 import { useState } from 'react';
 import { useHistory } from 'react-router';
-
-
 import { register } from '../../services/users-service';
+import introVideo from '../../video/Homepage_BG_video_8.webm';
 
 const EMAIL_PATTERN = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_PATTERN = /^.{8,}$/;
@@ -99,40 +98,45 @@ function RegisterForm() {
           errors: errors
         }))
       }
-    } 
+    }
   }
 
   const { user, errors, touch } = state;
 
   return (
-    <form className="mt-3 mb-3" onSubmit={handleSubmit}>
-      
-      <div className="input-group mb-2">
-        <span className="input-group-text"><i className="fa fa-user fa-fw"></i></span>
-        <input type="text" name="name" className={`form-control ${touch.name && errors.name ? 'is-invalid' : ''}`}
-          placeholder="Username" onBlur={handleBlur} onChange={handleChange} value={user.name} />
-        <div className="invalid-feedback">{errors.name}</div>
-      </div>
+    <>
+      <video autoPlay muted loop id="introVideo" >
+        <source src={introVideo} type="video/webm" />
+      </video>
+      <form className="loginForm" onSubmit={handleSubmit}>
 
-      <div className="input-group mb-2">
-        <span className="input-group-text"><i className="fa fa-envelope fa-fw"></i></span>
-        <input type="text" name="email" className={`form-control ${touch.email && errors.email ? 'is-invalid' : ''}`}
-          placeholder="Email" onBlur={handleBlur} onChange={handleChange} value={user.email} />
-        <div className="invalid-feedback">{errors.email}</div>
-      </div>
+        <div className="input-group mb-2">
+          <span className="input-group-text"><i className="fa fa-user fa-fw"></i></span>
+          <input type="text" name="name" className={`form-control ${touch.name && errors.name ? 'is-invalid' : ''}`}
+            placeholder="Username" onBlur={handleBlur} onChange={handleChange} value={user.name} />
+          <div className="invalid-feedback">{errors.name}</div>
+        </div>
 
-      <div className="input-group mb-2">
-        <span className="input-group-text"><i className="fa fa-lock fa-fw"></i></span>
-        <input type="password" name="password" className={`form-control ${touch.password && errors.password ? 'is-invalid' : ''}`}
-          placeholder="Password" onBlur={handleBlur} onChange={handleChange} value={user.password} />
-        <div className="invalid-feedback">{errors.password}</div>
-      </div>
+        <div className="input-group mb-2">
+          <span className="input-group-text"><i className="fa fa-envelope fa-fw"></i></span>
+          <input type="text" name="email" className={`form-control ${touch.email && errors.email ? 'is-invalid' : ''}`}
+            placeholder="Email" onBlur={handleBlur} onChange={handleChange} value={user.email} />
+          <div className="invalid-feedback">{errors.email}</div>
+        </div>
 
-      <div className="d-grid gap-2">
-        <button className="btn btn-primary" type="submit" disabled={!isValid()}>Register</button>
-      </div>
+        <div className="input-group mb-2">
+          <span className="input-group-text"><i className="fa fa-lock fa-fw"></i></span>
+          <input type="password" name="password" className={`form-control ${touch.password && errors.password ? 'is-invalid' : ''}`}
+            placeholder="Password" onBlur={handleBlur} onChange={handleChange} value={user.password} />
+          <div className="invalid-feedback">{errors.password}</div>
+        </div>
 
-    </form>
+        <div className="d-grid gap-2">
+          <button className="btn btn-primary" type="submit" disabled={!isValid()}>Register</button>
+        </div>
+
+      </form>
+    </>
   );
 }
 

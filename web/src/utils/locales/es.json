@@ -1,12 +1,12 @@
 {
     "Navbar": {
-      "title": "Iron Eventos",
+      "title": "Jelly Hub",
       "login": "Login",
-      "events": "Eventos",
+      "ads": "Anuncios",
       "register": "Registro"
     },
     "Events": {
-      "title": "Mejores eventos de la zona"
+      "title": "Ultimos anuncios publicados"
     }
   }
   
