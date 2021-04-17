@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { useHistory } from 'react-router';
 import { register } from '../../services/users-service';
-import introVideo from '../../video/Homepage_BG_video_8.webm';
 
 const EMAIL_PATTERN = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_PATTERN = /^.{8,}$/;
@@ -104,10 +103,6 @@ function RegisterForm() {
   const { user, errors, touch } = state;
 
   return (
-    <>
-      <video autoPlay muted loop id="introVideo" >
-        <source src={introVideo} type="video/webm" />
-      </video>
       <form className="loginForm" onSubmit={handleSubmit}>
 
         <div className="input-group mb-2">
@@ -134,9 +129,7 @@ function RegisterForm() {
         <div className="d-grid gap-2">
           <button className="btn btn-primary" type="submit" disabled={!isValid()}>Register</button>
         </div>
-
-      </form>
-    </>
+      </form>    
   );
 }
 

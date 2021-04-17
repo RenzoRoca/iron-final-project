@@ -34,8 +34,8 @@ function Navbar() {
           <ul className="navbar-nav d-flex">
             {!isAuthenticated() && (
               <Fragment>
-                <li className="nav-item"><NavLink className="nav-link text-white" activeClassName="active" to="/login">{t('Navbar.login')}</NavLink></li>
-                <li className="nav-item"><NavLink className="nav-link text-white" activeClassName="active" to="/register">{t('Navbar.register')}</NavLink></li>
+                <li className="nav-item"><NavLink className="nav-link text-white" activeClassName="active" to="/session/login">{t('Navbar.login')}</NavLink></li>
+                <li className="nav-item"><NavLink className="nav-link text-white" activeClassName="active" to="/session/register">{t('Navbar.register')}</NavLink></li>
               </Fragment>
             )}
             {isAuthenticated() && (

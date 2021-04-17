@@ -2,7 +2,6 @@ import { useState, useContext } from "react";
 import { useHistory, useLocation } from "react-router";
 import { login } from "../../services/users-service";
 import { AuthContext } from '../../contexts/AuthStore';
-import introVideo from '../../video/Homepage_BG_video_8.webm';
 
 function LoginForm() {
   const { onUserChange } = useContext(AuthContext);
@@ -49,10 +48,6 @@ function LoginForm() {
   const { user, errors } = state;
 
   return (
-    <>
-       <video autoPlay muted loop id="introVideo" >
-        <source src={introVideo} type="video/webm" />
-      </video>
     <form className="loginForm" onSubmit={handleSubmit}>
 
       <div className="input-group mb-2">
@@ -73,7 +68,6 @@ function LoginForm() {
       </div>
       
     </form>
-    </>
   );
 }
 

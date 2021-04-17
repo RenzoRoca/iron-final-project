@@ -11,6 +11,7 @@ import PrivateRoute from './guards/PrivateRoute';
 import Error from './screens/Error';
 import EditAd from './screens/EditAd';
 import AuthCallback from './screens/AuthCallback';
+import Video from './components/video/Video';
 
 function App() {
   return (
@@ -18,10 +19,11 @@ function App() {
       <AuthStore>
         <Navbar />
         <div className="container pt-4 pb-5">
+          <Route path="/session" component={Video} />
           <Switch>
             <Route exact path="/authenticate/google/cb" component={AuthCallback}/>
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
+            <Route exact path="/session/login" component={Login} />
+            <Route exact path="/session/register" component={Register} />
             
             <Route exact path="/ads" component={Ads} />
             <Route exact path="/ads/:id" component={AdDetail} />
@@ -31,7 +33,7 @@ function App() {
             <Route exact path="/404" component={() => <Error code={404} />} />
             <Route exact path="/403" component={() => <Error code={403} />} />
 
-            <Redirect to="/register" />
+            <Redirect to="/session/register" />
           </Switch>
         </div>
         <Footer/>
