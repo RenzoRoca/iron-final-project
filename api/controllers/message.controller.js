@@ -4,7 +4,7 @@ const User = require('../models/user.model');
 
 module.exports.list = (req, res, next) => {
 
-    Message.find({ mention: req.params.id})
+    Message.find({ mention: req.params.userId}).populate('author')
         .then(message => {
             if (message) res.status(200).json(message)
             else next(createError(404, 'Messages not found'))
@@ -25,21 +25,7 @@ module.exports.list = (req, res, next) => {
 module.exports.create = (req, res, next) => {
     req.body.author = req.user.id;
     Message.create(req.body)
-        .then(message => {
-
-            if(message) {
-                User.findOne({ _id: message.mention })
-                    .then(user => {
-                        User.updateOne({ _id: message.mention }, { $push: { messages: message } }, { new: true }).then(user => {
-                            if (!user) {
-                                next(httpError(404, 'Invalid user'))
-                            } else {
-                                res.status(201).json(message)
-                            }
-                        }).catch(next);
-                    })
-            }
-        })
+        .then(message => res.status(201).json(message))
         .catch(next) 
 }
 

@@ -18,6 +18,12 @@ const adSchema = new Schema({
         type: Boolean,
         default: true
     },
+    image: {
+        type: String,
+        default: function() {
+            return `https://i.pravatar.cc/150?u=${this.id}`
+        }
+    },
     applied: {
         type: [{
             type: String,

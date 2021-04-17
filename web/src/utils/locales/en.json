@@ -1,0 +1,12 @@
+{
+    "Navbar": {
+      "title": "Iron Events",
+      "login": "Login",
+      "events": "Events",
+      "register": "Register"
+    },
+    "Events": {
+      "title": "Best events in the area"
+    }
+  }
+  

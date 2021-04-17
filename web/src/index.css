@@ -11,3 +11,22 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.link-unstyled,
+.link-unstyled:visited,
+.link-unstyled:hover,
+.link-unstyled:active,
+.link-unstyled:focus,
+.link-unstyled:active:hover {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+.lang-group img {
+  height: 20px;
+  width: 20px;
+}
+
+.lang-group .btn:focus {
+  box-shadow: none;
+}

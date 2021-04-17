@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 const Message = require('./message.model');
 
 const userSchema = new Schema({
-    userName: {
+    name: {
         type: String,
         required: 'An user name is required',
         unique: true
@@ -39,12 +39,10 @@ const userSchema = new Schema({
     type: {
         type: String,
         enum : ['creator','company'],
-        default: 'creator',
-        required: 'A valid user type is required (creator company)'
+        default: 'creator'        
     },
     category: {
-        type: String,
-        required: 'A valid user category is required (creator company)'
+        type: String        
     },
     followers: Number,
     profileImage: {
@@ -52,13 +50,7 @@ const userSchema = new Schema({
         default: function() {
             return `https://i.pravatar.cc/150?u=${this.id}`
         }
-    },
-    messages: {
-        type: [{
-            type: String,
-            ref: 'Message'            
-        }]
-    }
+    }  
 }, {
     timestamps: true,
     toJSON: {
@@ -74,28 +66,44 @@ const userSchema = new Schema({
     }
 })
 
-/*
-userSchema.virtual('messages', {
+
+userSchema.virtual('messagesReceived', {
     ref: 'Message',
     localField: '_id',
-    foreignField: 'user.messages',
+    foreignField: 'mention',
     justOne: false,
 });
-*/
+
+userSchema.virtual('messagesSend', {
+    ref: 'Message',
+    localField: '_id',
+    foreignField: 'author',
+    justOne: false,
+});
+
 
 userSchema.virtual('ads', {
     ref: 'Ad',
     localField: '_id',
-    foreignField: 'user.ads',
+    foreignField: 'author',
     justOne: false,
 });
 
+userSchema.virtual('appliedAds', {
+    ref: 'Ad',
+    localField: '_id',
+    foreignField: 'applied',
+    justOne: false,
+});
+
+/*
 userSchema.virtual('blacklist', {
     ref: 'User',
     localField: '_id',
-    foreignField: 'user.blacklist',
+    foreignField: 'blacklist',
     justOne: false,
 });
+*/
 
 userSchema.pre('save', function (next) {
     if (this.isModified('password')) {
