@@ -1,19 +1,10 @@
 
-import langES from '../../images/icons/es.png';
-import langEN from '../../images/icons/en.png';
-import { changeLanguage } from '../../services/i18n-service';
-
-function Langs() {
+function Footer() {
   return (
-    <div className="btn-group lang-group" role="group" aria-label="Languages">
-      <button type="button" className="btn btn-link link-unstyled p-0 me-1" onClick={() => changeLanguage('es')}>
-        <img src={langES} alt="ES" />
-      </button>
-      <button type="button" className="btn btn-link link-unstyled p-0" onClick={() => changeLanguage('en')}>
-        <img src={langEN} alt="EN" />
-      </button>
-    </div>
+    <footer className="bg-light p-2 position-fixed w-100 bottom-0">
+      <div className="container text-center"><span>Made with <i className="fa fa-heart text-danger"></i> by PT</span></div>
+    </footer>
   );
 }
 
-export default Langs;
+export default Footer;
