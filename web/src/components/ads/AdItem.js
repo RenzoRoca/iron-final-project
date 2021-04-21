@@ -1,21 +1,46 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthStore';
 import { Link } from 'react-router-dom';
+import { List, Avatar, Space } from 'antd';
+import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 
+const IconText = ({ icon, text }) => (
+  <Space>
+    {React.createElement(icon)}
+    {text}
+  </Space>
+);
 
 function AdItem({ ad: { id, title, image, description, author } }) {
   const { user } = useContext(AuthContext);
 
   return (
-    <div className={`card shadow-sm ${user?.id === author?.id ? 'border-info rounded' : 'border-0 rounded-0'}`}>
-      <img src={image} className="card-img-top" alt={title} />
-      <div className="card-body">        
-        <span className="fw-lighter">{description}</span>
-        <br/>
-        <Link to={`/new-message/${id}`}><span >Responder a {author.name}</span></Link>
-        <Link className="stretched-link link-unstyled" to={`/ads/${id}`}><h5 className="card-title mt-2">{title}</h5></Link>
-      </div>
-    </div>
+    <List.Item
+      key={title}
+      actions={[
+        <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
+        <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
+        <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
+      ]}
+      extra={
+        <img
+          width={272}
+          alt={image}
+          src={image}
+        />        
+      }
+    >
+      <List.Item.Meta
+        avatar={<Avatar src={author.profileImage} />}
+        title={<a href={`/ads/${id}`}>{title}</a>}
+        description={
+          user.id !== author.id 
+          ? <Link activeclassname="active" to={`/new-message/${id}`}><span >Responder a {author.name}</span></Link> 
+          : <Link to={`/ads/${id}/edit`}><span >Editar <i className="fa fa-edit"></i></span></Link>
+        }
+      />
+      {description}
+    </List.Item>
   )
 }
 

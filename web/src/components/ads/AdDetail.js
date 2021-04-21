@@ -57,7 +57,7 @@ function AdDetail() {
     return null;
   }
 
-  const { image, title, description, open, applied, results, author } = ad;
+  const { id, image, title, description, open, applied, results, author } = ad;
   return (
     <Fragment>
       <div className="row row-cols-1 mb-4">
@@ -69,7 +69,7 @@ function AdDetail() {
           <div className="d-flex flex-row mb-2">
             <span className="badge rounded-pill bg-danger me-2 p-2"><i className="fa fa-clock-o me-1"></i>{open}</span>
           </div>
-          <div className="text-muted fst-italic fw-light mb-2">By {author.name}</div>
+          <div className="text-muted fst-italic fw-light mb-2">By {author}</div>
           {description.split('\n').map((p, i) => <p key={i}>{p}</p>)}
         </div>
         {applied && (
@@ -78,7 +78,7 @@ function AdDetail() {
           </div>
         )}
       </div>
-      {user?.id === ad.author.id && (
+      {user?.id === author.id && (
         <div className="col my-3 text-center">
           <div className="alert alert-secondary" role="alert">
             <h4 className="fw-light mb-2">Admin Area</h4>

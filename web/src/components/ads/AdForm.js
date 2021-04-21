@@ -1,8 +1,21 @@
-import { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import {
+  Form,
+  Input,
+  Button,
+  Radio,
+  Select,
+  Cascader,
+  DatePicker,
+  InputNumber,
+  TreeSelect,
+  Switch,
+  Upload
+} from 'antd';
+import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router';
 import adsService from '../../services/ads-services';
 import { useTranslation } from 'react-i18next';
-import { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthStore';
 
 const validations = {
@@ -23,17 +36,16 @@ const validations = {
       message = 'Description needs at least 10 characters'
     }
     return message;
-  },
-  image: (value) => {
-    let message;
-    if (!value) {
-      message = 'Image is required';
-    }
-    return message;
   }
 }
 
-function AdForm({ ad: adToEdit = {} }) {
+const AdForm = ({ ad: adToEdit = {} }) => {
+
+  const [componentSize, setComponentSize] = useState('default');
+
+  const onFormLayoutChange = ({ size }) => {
+    setComponentSize(size);
+  };
 
   const { t } = useTranslation();
   const history = useHistory();
@@ -43,7 +55,7 @@ function AdForm({ ad: adToEdit = {} }) {
     ad: {
       title: '',
       description: '',
-      image: '',      
+      image: '',
       author: user.id,
       applied: [],
       results: [],
@@ -51,8 +63,7 @@ function AdForm({ ad: adToEdit = {} }) {
     },
     errors: {
       title: validations.title(adToEdit.title),
-      description: validations.description(adToEdit.description),
-      image: validations.image(adToEdit.image)
+      description: validations.description(adToEdit.description)
     },
     touch: {}
   });
@@ -95,11 +106,11 @@ function AdForm({ ad: adToEdit = {} }) {
 
     if (isValid()) {
       try {
-        const adData = {...state.ad};
+        const adData = { ...state.ad };
         console.log('contenido del Ad => ', adData);
         const ad = adData.id ? await adsService.update(adData) : await adsService.create(adData);
         history.push(`/ads/${ad.id}`);
-      } catch(error) {
+      } catch (error) {
         const { message, errors } = error.response?.data || error;
 
         setState(state => ({
@@ -125,20 +136,69 @@ function AdForm({ ad: adToEdit = {} }) {
   const { ad, errors, touch } = state;
 
   return (
+    <>
+      <Form
+        labelCol={{
+          span: 6,
+        }}
+        wrapperCol={{
+          span: 14,
+        }}
+        layout="horizontal"
+        initialValues={{
+          size: componentSize,
+        }}
+        onValuesChange={onFormLayoutChange}
+        size={componentSize}
+        onSubmit={handleSubmit}
+      >
+        <Form.Item label={t('AdsForm.title')}>
+          <Input type="text" name="title" className={`form-control ${(touch.title && errors.title) ? 'is-invalid' : ''}`} placeholder={t('AdsForm.title')}
+            value={ad.title} onBlur={handleBlur} onChange={handleChange} />
+          <div className="invalid-feedback">{errors.title}</div>
+        </Form.Item>
+        <Form.Item label={t('AdsForm.description')}>
+          <Input.TextArea name="description" className={`form-control ${(touch.description && errors.description) ? 'is-invalid' : ''}`} placeholder={t('AdsForm.description')}
+            value={ad.description} onBlur={handleBlur} onChange={handleChange} />
+          <div className="invalid-feedback">{errors.description}</div>
+        </Form.Item>
+        <div className="input-group mb-2">
+            <span className="input-group-text"><i className="fa fa-picture-o fa-fw"></i></span>
+            <input type="file" name="image" placeholder="Event image..."
+              onBlur={handleBlur} onChange={handleChange} />
+        </div>
+        <Form.Item label={t('AdsForm.open')} type="checkbox" name="open" >
+          <Switch />
+        </Form.Item>
+        <Form.Item >
+          {ad.id && <Button type="submit" disabled={!isValid()}>Update ad</Button>}
+          {!ad.id && <Button type="submit" disabled={!isValid()}>Create ad</Button>}
+        </Form.Item>
+      </Form>
+    </>
+  );
+};
+
+export default AdForm;
+
+/*
+function AdForm({ ad: adToEdit = {} }) {
+
+  return (
     <div className="row row-cols-1">
       <div className="col text-center mb-2">
         <img className="img-fluid img-thumbnail" src={ad.image} alt={ad.title} onError={(ad) => ad.target.src = 'https://via.placeholder.com/800x400'} />
       </div>
       <div className="col">
         <form onSubmit={handleSubmit}>
-          
+
           <div className="input-group mb-2">
             <span className="input-group-text"><i className="fa fa-tag fa-fw"></i></span>
             <input type="text" name="title" className={`form-control ${(touch.title && errors.title) ? 'is-invalid' : ''}`} placeholder={t('AdsForm.title')}
               value={ad.title} onBlur={handleBlur} onChange={handleChange} />
             <div className="invalid-feedback">{errors.title}</div>
           </div>
-          
+
           <div className="input-group mb-2">
             <span className="input-group-text"><i className="fa fa-edit fa-fw"></i></span>
             <textarea name="description" className={`form-control ${(touch.description && errors.description) ? 'is-invalid' : ''}`} placeholder={t('AdsForm.description')}
@@ -166,8 +226,8 @@ function AdForm({ ad: adToEdit = {} }) {
         </form>
       </div>
     </div>
-
   );
 }
 
 export default AdForm;
+*/

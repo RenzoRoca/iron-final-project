@@ -1,6 +1,5 @@
 import { useContext, Fragment } from 'react';
 import { Link, NavLink, useHistory } from 'react-router-dom';
-import logo from '../../images/logo-ih.svg';
 import { useTranslation } from 'react-i18next';
 import userService from '../../services/users-service';
 import { AuthContext } from '../../contexts/AuthStore';
@@ -17,7 +16,6 @@ function Navbar() {
     history.push('/login');
   }
 
-
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
@@ -31,6 +29,11 @@ function Navbar() {
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item"><NavLink className="nav-link" activeClassName="active" to="/ads">{t('Navbar.ads')}</NavLink></li>
             <li className="nav-item"><NavLink className="nav-link" activeClassName="active" to="/users">{t('Navbar.users')}</NavLink></li>
+            {isAuthenticated() && (
+              <Fragment>
+                <li className="nav-item"><NavLink className="nav-link" activeClassName="active" to="/messages">Messages</NavLink></li>
+              </Fragment>
+            )}
           </ul>
           <ul className="navbar-nav d-flex">
             {!isAuthenticated() && (
@@ -46,7 +49,7 @@ function Navbar() {
                 <li className="nav-item"><button type="submit" className="btn btn-link link-unstyled text-light" onClick={handleLogout}><i className="fa fa-sign-out" ></i></button></li>
               </Fragment>
             )}
-          <li className="nav-item" style={{ paddingTop: '5px'}}><Langs /></li>
+            <li className="nav-item" style={{ paddingTop: '5px' }}><Langs /></li>
           </ul>
         </div>
       </div>

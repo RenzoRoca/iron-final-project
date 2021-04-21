@@ -14,6 +14,8 @@ import AuthCallback from './screens/AuthCallback';
 import Video from './components/video/Video';
 import Users from './screens/Users';
 import MessageBox from './components/messages/MessageBox';
+import MessagesList from './components/messages/MessageList';
+import 'antd/dist/antd.css';
 
 function App() {
   return (
@@ -34,6 +36,7 @@ function App() {
             <PrivateRoute exact path="/create-ad" component={AdForm} />
             <PrivateRoute exact path="/ads/:id/edit" component={EditAd} />
 
+            <Route exact path="/messages" component={MessagesList} />
             <Route exact path="/new-message/:id" component={MessageBox} />
             
             <Route exact path="/404" component={() => <Error code={404} />} />
