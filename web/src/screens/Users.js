@@ -1,15 +1,16 @@
 import { Fragment } from "react";
 import { useTranslation } from 'react-i18next';
-import AdsList from '../components/ads/AdList';
+import UserList from "../components/users/UserList";
 
-function Ads() {
+
+function Users() {
   const { t } = useTranslation()
   return (
     <Fragment>
-      <h3 className="mb-3">{t('Ads.title')}</h3>
-      <AdsList />
+      <h3 className="mb-3">{t('Users.name')}</h3>
+      <UserList />
     </Fragment>
   );
 }
 
-export default Ads;
+export default Users;

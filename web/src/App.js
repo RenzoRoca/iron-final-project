@@ -12,6 +12,8 @@ import Error from './screens/Error';
 import EditAd from './screens/EditAd';
 import AuthCallback from './screens/AuthCallback';
 import Video from './components/video/Video';
+import Users from './screens/Users';
+import MessageBox from './components/messages/MessageBox';
 
 function App() {
   return (
@@ -24,11 +26,15 @@ function App() {
             <Route exact path="/authenticate/google/cb" component={AuthCallback}/>
             <Route exact path="/session/login" component={Login} />
             <Route exact path="/session/register" component={Register} />
-            
+            <Route exact path="/users" component={Users} />
+
+            <Route exact path="/ads" component={Ads} />
             <Route exact path="/ads" component={Ads} />
             <Route exact path="/ads/:id" component={AdDetail} />
             <PrivateRoute exact path="/create-ad" component={AdForm} />
             <PrivateRoute exact path="/ads/:id/edit" component={EditAd} />
+
+            <Route exact path="/new-message/:id" component={MessageBox} />
             
             <Route exact path="/404" component={() => <Error code={404} />} />
             <Route exact path="/403" component={() => <Error code={403} />} />

@@ -1,11 +1,12 @@
 import http from './base-api-service';
 
-const list = (search) => http.get('/ads', { params: { search } })
+const list = (search) => http.get('/ads', { 
+  params: { search } })
 
 const get = (id) => http.get(`/ads/${id}`)
 
 const create = (ad) => {
-  console.log(ad);
+
   const data = new FormData()
 
   Object.keys(ad).forEach(key => {

@@ -1,11 +1,11 @@
 import { useState } from 'react';
 
-function AdsFilter({ className, onSearch, loading }) {
+function UsersFilter({ className, onSearch, loading }) {
 
   const [search, setSearch] = useState('');
 
-  const handleChange = (ad) => {
-    const { value } = ad.target;
+  const handleChange = (user) => {
+    const { value } = user.target;
     setSearch(value);
     onSearch(value);
   }
@@ -25,10 +25,10 @@ function AdsFilter({ className, onSearch, loading }) {
   )
 }
 
-AdsFilter.defaultProps = {
+UsersFilter.defaultProps = {
   loading: false,
   className: '',
   onSearch: () => {}
 }
 
-export default AdsFilter;
+export default UsersFilter;

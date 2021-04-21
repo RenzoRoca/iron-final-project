@@ -1,6 +1,6 @@
 import RegisterForm from '../components/users/RegisterForm';
 import { Link } from 'react-router-dom';
-import { socialLoginUrl } from '../services/users-service';
+import userService from '../services/users-service';
 
 function Register() {
   return (
@@ -10,7 +10,7 @@ function Register() {
         <hr/>
         <div className="d-grid gap-2">
           <Link className="btn btn-secondary" type="button" to="/login">Login</Link>
-          <a className="btn btn-danger" href={socialLoginUrl}><i className="fa fa-google"></i> Login with Google</a>
+          <a className="btn btn-danger" href={userService.socialLoginUrl}><i className="fa fa-google"></i> Login with Google</a>
         </div>
       </div>
     </div>

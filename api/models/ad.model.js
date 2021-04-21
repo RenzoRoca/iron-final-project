@@ -27,8 +27,7 @@ const adSchema = new Schema({
     applied: {
         type: [{
             type: String,
-            ref: 'User',
-            unique: true
+            ref: 'User'            
         }]
     },
     results: {
@@ -36,6 +35,17 @@ const adSchema = new Schema({
             type: String,
             ref: 'Result'
         }]
+    }
+}, {
+    timestamps: true,
+    toJSON: {
+        virtuals: true,
+        transform: (doc, ret) => {
+            ret.id = doc._id;
+            delete ret._id;
+            delete ret.__v;
+            return ret
+        }
     }
 });
 

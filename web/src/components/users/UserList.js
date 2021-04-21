@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
-import AdItem from './AdItem';
+import UserItem from './UserItem';
 
-import AdsService from '../../services/ads-services';
+import UsersService from '../../services/users-service';
 import { Fragment } from 'react';
-import AdsFilter from './AdsFilter';
+import UsersFilter from './UserFilter';
 
-function AdsList({ minSearchChars }) {
+function UserList({ minSearchChars }) {
 
   const [state, setState] = useState({
-    Ads: [],
+    Users: [],
     loading: false
   });
   const [search, setSearch] = useState('');
@@ -16,19 +16,17 @@ function AdsList({ minSearchChars }) {
   useEffect(() => {
     // componentDidMount
 
-    async function fetchAds() {
-      console.log('Fetching Ads...');
+    async function fetchUsers() {
       
       setState(state => ({
         ...state,
         loading: true
       }))
-      const Ads = await AdsService.list(search);
-      console.log(Ads);
-      
+      const Users = await UsersService.list(search);
+
       if (!isUnmounted) {
         setState({
-          Ads: Ads,
+          Users: Users,
           loading: false
         })
       }
@@ -37,7 +35,7 @@ function AdsList({ minSearchChars }) {
     let isUnmounted = false;
 
     if (search.length >= minSearchChars || search.length === 0) {
-      fetchAds();
+      fetchUsers();
     }
 
     return () => {
@@ -48,14 +46,14 @@ function AdsList({ minSearchChars }) {
 
   const handleSearch = search => setSearch(search);
   
-  const { Ads, loading } = state;
+  const { Users, loading } = state;
 
   return (
     <Fragment>
-      <AdsFilter className="mb-3" onSearch={handleSearch} loading={loading} />
+      <UsersFilter className="mb-3" onSearch={handleSearch} loading={loading} />
       <div className="row row-cols-4">
-        {Ads.map(ad => (
-          <div key={ad.id} className="col mb-4"><AdItem ad={ad} /></div>
+        {Users.map(user => (
+          <div key={user.id} className="col mb-4"><UserItem user={user} /></div>
         ))}
       </div>
     </Fragment>
@@ -63,8 +61,8 @@ function AdsList({ minSearchChars }) {
   )
 }
 
-AdsList.defaultProps = {
+UserList.defaultProps = {
   minSearchChars: 4
 }
 
-export default AdsList;
+export default UserList;

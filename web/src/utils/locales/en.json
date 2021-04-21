@@ -3,10 +3,16 @@
       "title": "Jelly Hub",
       "login": "Login",
       "ads": "Ads",
+      "users": "Users",
       "register": "Register"
     },
     "Events": {
       "title": "Last ads published"
+    },
+    "AdsForm": {
+      "title": "Ad title",
+      "description": "Ad description",
+      "open": "Open Ad"
     }
   }
   

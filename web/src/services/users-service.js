@@ -1,11 +1,27 @@
 import http from './base-api-service';
 
-export const socialLoginUrl = `${process.env.REACT_APP_API_BASE_URL}/authenticate/google`
+const socialLoginUrl = `${process.env.REACT_APP_API_BASE_URL}/authenticate/google`
 
-export const login = (email, password) => http.post('/login', { email, password })
+const login = (email, password) => http.post('/login', { email, password })
 
-export const profile = () => http.get('/users/me')
+const list = (search) => http.get('/userList', { params: { search } })
 
-export const register = (user) => http.post('/users', user)
+const get = (id) => http.get(`/users/${id}`)
 
-export const logout = () => http.post('/logout')
+const profile = () => http.get('/users/me')
+
+const register = (user) => http.post('/users', user)
+
+const logout = () => http.post('/logout')
+
+const service = {
+    socialLoginUrl,
+    login,
+    list,
+    get,
+    profile,
+    register,
+    logout
+}
+  
+export default service;

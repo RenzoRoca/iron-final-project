@@ -12,15 +12,15 @@ module.exports.isAuthenticated = (req, res, next) => {
 module.exports.isOwner = (req, res, next) => {
   
 
-  if (req.isAuthenticated()) {
+  if (req.isAuthenticated()) {    
 
-    console.log('user is owner? ', req)
-
-    if(req.user.id){
+    //if(req.user.id === req.isOwner){
       next();
-    }
+    //}
     
   } else {
     next(createError(401, 'user is not authenticated'))
   }
 };
+
+// TODO: 

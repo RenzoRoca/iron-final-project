@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { useHistory, useLocation } from "react-router";
-import { login } from "../../services/users-service";
+import userService from "../../services/users-service";
 import { AuthContext } from '../../contexts/AuthStore';
 
 function LoginForm() {
@@ -32,7 +32,7 @@ function LoginForm() {
     event.preventDefault()
 
     try {
-      const user = await login(state.user.email, state.user.password);
+      const user = await userService.login(state.user.email, state.user.password);
       onUserChange(user);
       history.push('/');
     } catch (error) {

@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
-import AdItem from './AdItem';
+import MessageItem from './MessageItem';
 
-import AdsService from '../../services/ads-services';
+import MessageService from '../../services/messages-service';
 import { Fragment } from 'react';
-import AdsFilter from './AdsFilter';
+import MessagesFilter from './MessagesFilter';
 
-function AdsList({ minSearchChars }) {
+function MessagesList({ minSearchChars }) {
 
   const [state, setState] = useState({
-    Ads: [],
+    Messages: [],
     loading: false
   });
   const [search, setSearch] = useState('');
@@ -16,19 +16,19 @@ function AdsList({ minSearchChars }) {
   useEffect(() => {
     // componentDidMount
 
-    async function fetchAds() {
-      console.log('Fetching Ads...');
+    async function fetchMessages() {
+      console.log('Fetching Messages...');
       
       setState(state => ({
         ...state,
         loading: true
       }))
-      const Ads = await AdsService.list(search);
-      console.log(Ads);
+      const Messages = await MessageService.list(search);
+      console.log(Messages);
       
       if (!isUnmounted) {
         setState({
-          Ads: Ads,
+          Messages: Messages,
           loading: false
         })
       }
@@ -37,7 +37,7 @@ function AdsList({ minSearchChars }) {
     let isUnmounted = false;
 
     if (search.length >= minSearchChars || search.length === 0) {
-      fetchAds();
+      fetchMessages();
     }
 
     return () => {
@@ -48,14 +48,14 @@ function AdsList({ minSearchChars }) {
 
   const handleSearch = search => setSearch(search);
   
-  const { Ads, loading } = state;
+  const { Messages, loading } = state;
 
   return (
     <Fragment>
-      <AdsFilter className="mb-3" onSearch={handleSearch} loading={loading} />
+      <MessagesFilter className="mb-3" onSearch={handleSearch} loading={loading} />
       <div className="row row-cols-4">
-        {Ads.map(ad => (
-          <div key={ad.id} className="col mb-4"><AdItem ad={ad} /></div>
+        {Messages.map(ad => (
+          <div key={ad.id} className="col mb-4"><MessageItem ad={ad} /></div>
         ))}
       </div>
     </Fragment>
@@ -63,8 +63,8 @@ function AdsList({ minSearchChars }) {
   )
 }
 
-AdsList.defaultProps = {
+MessagesList.defaultProps = {
   minSearchChars: 4
 }
 
-export default AdsList;
+export default MessagesList;

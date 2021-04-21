@@ -3,19 +3,24 @@ const Ad = require('../models/ad.model');
 
 module.exports.list = (req, res, next) => {
 
-  const criteria = {}
-
-  if(req.query.type){
-    criteria.type = req.query.type;
-  }
-
-  Ad.find(criteria)
-      .then(ad => res.status(201).json(ad))
+  Ad.find().populate('author').then(ad => {
+          console.log('datos con author =>');
+          console.log(ad);
+          res.status(200).json(ad);
+          
+        })
       .catch(next)
 }
 
 module.exports.create = (req, res, next) => {
     req.body.author = req.user.id;
+    console.log('new cosa');
+    console.log(req.body);
+
+    if (req.file) {
+        req.body.image = req.file.url
+    }
+
     Ad.create(req.body)        
         .then(ad => res.status(201).json(ad))
         .catch(next) 

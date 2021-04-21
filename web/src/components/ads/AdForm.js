@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useHistory } from 'react-router';
 import adsService from '../../services/ads-services';
+import { useTranslation } from 'react-i18next';
+import { useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthStore';
 
 const validations = {
   title: (value) => {
@@ -20,21 +23,36 @@ const validations = {
       message = 'Description needs at least 10 characters'
     }
     return message;
-  }  
+  },
+  image: (value) => {
+    let message;
+    if (!value) {
+      message = 'Image is required';
+    }
+    return message;
+  }
 }
 
-function AdForm({ event: eventToEdit = {} }) {
+function AdForm({ ad: adToEdit = {} }) {
 
+  const { t } = useTranslation();
   const history = useHistory();
+  const { user } = useContext(AuthContext);
+
   const [state, setState] = useState({
-    event: {
+    ad: {
       title: '',
       description: '',
-      ...eventToEdit
+      image: '',      
+      author: user.id,
+      applied: [],
+      results: [],
+      ...adToEdit
     },
     errors: {
-      title: validations.title(eventToEdit.title),
-      description: validations.description(eventToEdit.description)      
+      title: validations.title(adToEdit.title),
+      description: validations.description(adToEdit.description),
+      image: validations.image(adToEdit.image)
     },
     touch: {}
   });
@@ -49,8 +67,8 @@ function AdForm({ event: eventToEdit = {} }) {
     setState(state => {
       return {
         ...state,
-        event: {
-          ...state.event,
+        ad: {
+          ...state.ad,
           [name]: value,
         },
         errors: {
@@ -77,19 +95,12 @@ function AdForm({ event: eventToEdit = {} }) {
 
     if (isValid()) {
       try {
-        const eventData = {...state.event};
-        eventData.location = [Number(eventData.longitude), Number(eventData.latitude)];
-        eventData.tags = eventData.tags.split(',').map(tag => tag.trim()) || [];
-        const event = eventData.id ? await adsService.update(eventData) : await adsService.create(eventData);
-        history.push(`/events/${event.id}`);
+        const adData = {...state.ad};
+        console.log('contenido del Ad => ', adData);
+        const ad = adData.id ? await adsService.update(adData) : await adsService.create(adData);
+        history.push(`/ads/${ad.id}`);
       } catch(error) {
         const { message, errors } = error.response?.data || error;
-
-        if (errors?.location) {
-          errors.latitude = errors.location;
-          errors.longitude = errors.location;
-          delete errors.location;
-        }
 
         setState(state => ({
           ...state,
@@ -111,37 +122,30 @@ function AdForm({ event: eventToEdit = {} }) {
     return !Object.keys(errors).some(error => errors[error]);
   }
 
-  const { event, errors, touch } = state;
+  const { ad, errors, touch } = state;
 
   return (
     <div className="row row-cols-1">
       <div className="col text-center mb-2">
-        <img className="img-fluid img-thumbnail" src={event.image} alt={event.title} onError={(event) => event.target.src = 'https://via.placeholder.com/800x400'} />
+        <img className="img-fluid img-thumbnail" src={ad.image} alt={ad.title} onError={(ad) => ad.target.src = 'https://via.placeholder.com/800x400'} />
       </div>
       <div className="col">
         <form onSubmit={handleSubmit}>
           
           <div className="input-group mb-2">
             <span className="input-group-text"><i className="fa fa-tag fa-fw"></i></span>
-            <input type="text" name="title" className={`form-control ${(touch.title && errors.title) ? 'is-invalid' : ''}`} placeholder="Event title..."
-              value={event.title} onBlur={handleBlur} onChange={handleChange} />
+            <input type="text" name="title" className={`form-control ${(touch.title && errors.title) ? 'is-invalid' : ''}`} placeholder={t('AdsForm.title')}
+              value={ad.title} onBlur={handleBlur} onChange={handleChange} />
             <div className="invalid-feedback">{errors.title}</div>
           </div>
           
           <div className="input-group mb-2">
             <span className="input-group-text"><i className="fa fa-edit fa-fw"></i></span>
-            <textarea name="description" className={`form-control ${(touch.description && errors.description) ? 'is-invalid' : ''}`} placeholder="Event description..."
-              value={event.description} onBlur={handleBlur} onChange={handleChange}></textarea>
+            <textarea name="description" className={`form-control ${(touch.description && errors.description) ? 'is-invalid' : ''}`} placeholder={t('AdsForm.description')}
+              value={ad.description} onBlur={handleBlur} onChange={handleChange}></textarea>
             <div className="invalid-feedback">{errors.description}</div>
           </div>
-          
-          <div className="input-group mb-2">
-            <span className="input-group-text"><i className="fa fa-users fa-fw"></i></span>
-            <input type="number" name="capacity" className={`form-control ${(touch.capacity && errors.capacity) ? 'is-invalid' : ''}`} placeholder="Event capacity..."
-              value={event.capacity} onBlur={handleBlur} onChange={handleChange} />
-            <div className="invalid-feedback">{errors.capacity}</div>
-          </div>
-          
+
           <div className="input-group mb-2">
             <span className="input-group-text"><i className="fa fa-picture-o fa-fw"></i></span>
             <input type="file" name="image" className={`form-control ${(touch.image && errors.image) ? 'is-invalid' : ''}`} placeholder="Event image..."
@@ -150,46 +154,13 @@ function AdForm({ event: eventToEdit = {} }) {
           </div>
 
           <div className="input-group mb-2">
-            <span className="input-group-text"><i className="fa fa-globe fa-fw"></i></span>
-            
-            <span className="input-group-text">Latitude</span>
-            <input name="latitude" type="number" className={`form-control ${(touch.latitude && errors.latitude) ? 'is-invalid' : ''}`} 
-              value={event.latitude} onBlur={handleBlur} onChange={handleChange}/>
-
-            <span className="input-group-text">Longitude</span>
-            <input name="longitude" type="number" className={`form-control ${(touch.longitude && errors.longitude) ? 'is-invalid' : ''}`} 
-              value={event.longitude} onBlur={handleBlur} onChange={handleChange} />
-            
-            {touch.latitude && errors.latitude && <div className="invalid-feedback">{errors.latitude}</div>}
-            {touch.longitude && errors.longitude && <div className="invalid-feedback">{errors.longitude}</div>}
+            <input type="checkbox" name="open" /> <span className="input-group-text">{t('AdsForm.open')}</span>
           </div>
 
-          <div className="input-group mb-2">
-            <span className="input-group-text"><i className="fa fa-clock-o fa-fw"></i></span>
-            
-            <span className="input-group-text">Start</span>
-            <input type="datetime-local" name="start" className={`form-control ${(touch.start && errors.start) ? 'is-invalid' : ''}`} placeholder="dd/mm/yyyy hh:mm"
-              value={event.start} onBlur={handleBlur} onChange={handleChange} />
-
-            <span className="input-group-text">End</span>
-            <input name="end" type="datetime-local" className={`form-control ${(touch.end && errors.end) ? 'is-invalid' : ''}`} placeholder="dd/mm/yyyy hh:mm"
-              value={event.end} onBlur={handleBlur} onChange={handleChange} />
-            
-            {touch.start && errors.start && <div className="invalid-feedback">{errors.start}</div>}
-            {touch.end && errors.end && <div className="invalid-feedback">{errors.end}</div>}
-          </div>
-
-          <div className="input-group mb-2">
-            <span className="input-group-text"><i className="fa fa-tag fa-fw"></i></span>
-            <input type="text" name="tags" className={`form-control ${(touch.tags && errors.tags) ? 'is-invalid' : ''}`} placeholder="Coma separated event tags..."
-              value={event.tags} onBlur={handleBlur} onChange={handleChange} />
-            <div className="invalid-feedback">{errors.tags}</div>
-          </div>
-          
           <div className="d-grid">
             <button type="submit" className="btn btn-primary" disabled={!isValid()}>
-              {event.id && <span>Update Event</span>}
-              {!event.id && <span>Create Event</span>}
+              {ad.id && <span>Update ad</span>}
+              {!ad.id && <span>Create ad</span>}
             </button>
           </div>
         </form>

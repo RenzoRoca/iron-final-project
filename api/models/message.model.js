@@ -25,6 +25,17 @@ const messageSchema = new Schema({
         type: Boolean,
         default: false
     }
+}, {
+    timestamps: true,
+    toJSON: {
+        virtuals: true,
+        transform: (doc, ret) => {
+            ret.id = doc._id;
+            delete ret._id;
+            delete ret.__v;
+            return ret
+        }
+    }
 })
 
 messageSchema.virtual('messages', {

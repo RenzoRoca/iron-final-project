@@ -3,10 +3,16 @@
       "title": "Jelly Hub",
       "login": "Login",
       "ads": "Anuncios",
+      "users": "Influencers",
       "register": "Registro"
     },
     "Events": {
       "title": "Ultimos anuncios publicados"
+    },
+    "AdsForm": {
+      "title": "Título del anuncio",
+      "description": "Descripción del anuncio",
+      "open": "Anuncio abierto"
     }
   }
   
