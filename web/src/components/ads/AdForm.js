@@ -39,6 +39,7 @@ const validations = {
   }
 }
 
+/*
 const AdForm = ({ ad: adToEdit = {} }) => {
 
   const [componentSize, setComponentSize] = useState('default');
@@ -180,9 +181,98 @@ const AdForm = ({ ad: adToEdit = {} }) => {
 };
 
 export default AdForm;
+*/
 
-/*
+
 function AdForm({ ad: adToEdit = {} }) {
+
+  const { t } = useTranslation();
+  const history = useHistory();
+  const { user } = useContext(AuthContext);
+
+  const [state, setState] = useState({
+    ad: {
+      title: '',
+      description: '',
+      image: '',
+      author: user.id,
+      applied: [],
+      results: [],
+      ...adToEdit
+    },
+    errors: {
+      title: validations.title(adToEdit.title),
+      description: validations.description(adToEdit.description)
+    },
+    touch: {}
+  });
+
+  const handleChange = (event) => {
+    let { name, value } = event.target;
+
+    if (event.target.files) {
+      value = event.target.files[0]
+    }
+
+    setState(state => {
+      return {
+        ...state,
+        ad: {
+          ...state.ad,
+          [name]: value,
+        },
+        errors: {
+          ...state.errors,
+          [name]: validations[name] && validations[name](value),
+        }
+      }
+    });
+  }
+
+  const handleBlur = (event) => {
+    const { name } = event.target;
+    setState(state => ({
+      ...state,
+      touch: {
+        ...state.touch,
+        [name]: true
+      }
+    }));
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (isValid()) {
+      try {
+        const adData = { ...state.ad };
+        console.log('contenido del Ad => ', adData);
+        const ad = adData.id ? await adsService.update(adData) : await adsService.create(adData);
+        history.push(`/ads/${ad.id}`);
+      } catch (error) {
+        const { message, errors } = error.response?.data || error;
+
+        setState(state => ({
+          ...state,
+          errors: {
+            ...errors,
+            title: !errors && message
+          },
+          touch: {
+            ...errors,
+            title: !errors && message
+          }
+        }));
+      }
+    }
+  }
+
+  const isValid = () => {
+    const { errors } = state;
+    return !Object.keys(errors).some(error => errors[error]);
+  }
+
+  const { ad, errors, touch } = state;
 
   return (
     <div className="row row-cols-1">
@@ -230,4 +320,3 @@ function AdForm({ ad: adToEdit = {} }) {
 }
 
 export default AdForm;
-*/
