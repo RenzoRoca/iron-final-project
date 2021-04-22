@@ -16,6 +16,7 @@ import Users from './screens/Users';
 import MessageBox from './components/messages/MessageBox';
 import MessagesList from './components/messages/MessageList';
 import 'antd/dist/antd.css';
+import UserAdmin from './components/users/UserAdmin';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
 
             <Route exact path="/messages" component={MessagesList} />
             <Route exact path="/new-message/:id" component={MessageBox} />
+            <Route exact path="/user-admin" component={UserAdmin} />
             
             <Route exact path="/404" component={() => <Error code={404} />} />
             <Route exact path="/403" component={() => <Error code={403} />} />
