@@ -1,98 +1,102 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import MessageItem from './MessageItem';
-
 import MessageService from '../../services/messages-service';
 import { Fragment } from 'react';
 import MessageBox from './MessageBox';
+import firebase from '../../services/notification-service';
+import moment from 'moment';
+import { useHistory } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import { AuthContext } from '../../contexts/AuthStore';
+
+const db = firebase.firestore();
 
 
 function MessagesList({ minSearchChars }) {
 
-  /*
-  const [state, setState] = useState({
-    Messages: [],
-    loading: false
-  });
-  const [search, setSearch] = useState('');
-  */
+  const { t } = useTranslation();
+  const history = useHistory();
+  const { user } = useContext(AuthContext);
 
-  /*
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
+
   useEffect(() => {
-    // componentDidMount
 
-    async function fetchMessages() {
-      console.log('Fetching Messages...');
-      
-      setState(state => ({
-        ...state,
-        loading: true
-      }))
-      const Messages = await MessageService.list(search);
-      console.log(Messages);
-      
-      if (!isUnmounted) {
-        setState({
-          Messages: Messages,
-          loading: false
+    console.log('fire db => ', db);
+
+    if (db) {
+      const unsubscribe = db
+        .collection('messages')
+        .orderBy('creationDate')
+        .limit(100)
+        .onSnapshot(querySnapshot => {
+          // Get all documents from collection - with IDs
+          const data = querySnapshot.docs.map(doc => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          console.log('all the data');
+          console.log(data);
+          // Update state
+          setMessages(data);
         })
-      }
+
+      // Detach listener
+      return unsubscribe;
     }
+  }, [db]);
 
-    let isUnmounted = false;
+  const handleOnChange = e => {
+    setNewMessage(e.target.value);
+  }
 
-    if (search.length >= minSearchChars || search.length === 0) {
-      fetchMessages();
+  const handleOnSubmit = e => {
+    e.preventDefault();
+    
+    if (db) {
+      db.collection('messages').add({
+        text: newMessage,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        author: user.id
+        //mention: user.id, // será el autor del ad
+        //photoUrl: user.profileImage
+      })
     }
+    
+    setNewMessage(e.target.value);
+  }
 
-    return () => {
-      // componentWillUnmount
-      isUnmounted =  true;
-    }
-  }, [search, minSearchChars]);
-  */
-  //const handleSearch = search => setSearch(search);
-  
-  //const { Messages, loading } = state;
-
-  /*
   return (
-    <Fragment>
-      <MessagesFilter className="mb-3" onSearch={handleSearch} loading={loading} />
-      <div className="row row-cols-4">
-        {Messages.map(ad => (
-          <div key={ad.id} className="col mb-4"><MessageItem ad={ad} /></div>
-        ))}
-      </div>
-    </Fragment>)
-  */
-  
-  return (
-    <Fragment>
-      <div class="chat-container">
+    <>
+      {messages.map(message => 
+        <div key={message.id} className="chat-container">
         <img src="/w3images/bandmember.jpg" alt="Avatar" />
-        <p>Hello. How are you today?</p>
-        <span class="time-right">11:00</span>
+        <p>{message.text}</p>
+        <span className="time-right">{moment({}).seconds(message.creationDate.seconds).format('H:mm:ss')}</span>
       </div>
-
-      <div class="chat-container darker">
-        <img src="/w3images/avatar_g2.jpg" alt="Avatar" class="right" />
-        <p>Hey! I'm fine. Thanks for asking!</p>
-        <span class="time-left">11:01</span>
+      )}
+      <div className="row row-cols-1">      
+      <div className="col">
+        <form onSubmit={handleOnSubmit}>
+          
+          <div className="input-group mb-2">
+            <span className="input-group-text"><i className="fa fa-tag fa-fw"></i></span>
+            <input 
+              type="text" 
+              value={newMessage} 
+              onChange={handleOnChange}
+              placeholder={t('MessageBox.text')}
+            />
+          </div>
+          
+          <button type="submit" className="btn btn-primary" disabled={!newMessage}>
+            <span>Send message</span>
+          </button>          
+        </form>
       </div>
-
-      <div class="chat-container">
-        <img src="/w3images/bandmember.jpg" alt="Avatar" />
-        <p>Sweet! So, what do you wanna do today?</p>
-        <span class="time-right">11:02</span>
-      </div>
-
-      <div class="chat-container darker">
-        <img src="/w3images/avatar_g2.jpg" alt="Avatar" class="right" />
-        <p>Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>
-        <span class="time-left">11:05</span>
-      </div>
-      <MessageBox />
-    </Fragment>)    
+    </div>
+    </>)
 
 }
 

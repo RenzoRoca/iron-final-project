@@ -17,6 +17,8 @@ import MessageBox from './components/messages/MessageBox';
 import MessagesList from './components/messages/MessageList';
 import 'antd/dist/antd.css';
 import UserAdmin from './components/users/UserAdmin';
+import firebase from './services/notification-service';
+
 
 function App() {
   return (
