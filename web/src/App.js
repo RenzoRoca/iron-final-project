@@ -18,6 +18,7 @@ import MessagesList from './components/messages/MessageList';
 import 'antd/dist/antd.css';
 import UserAdmin from './components/users/UserAdmin';
 import firebase from './services/notification-service';
+import UserDetail from './components/users/UserDetail';
 
 
 function App() {
@@ -25,13 +26,15 @@ function App() {
     <Router>
       <AuthStore>
         <Navbar />
-        <div className="container pt-4 pb-5">
-          <Route path="/session" component={Video} />
-          <Switch>
-            <Route exact path="/authenticate/google/cb" component={AuthCallback}/>
+        <Route path="/session" component={Video} />
+        <Switch>
+          <div className="container pt-5 pb-5">
+
+            <Route exact path="/authenticate/google/cb" component={AuthCallback} />
             <Route exact path="/session/login" component={Login} />
             <Route exact path="/session/register" component={Register} />
             <Route exact path="/users" component={Users} />
+            <Route exact path="/users/:id" component={UserDetail} />
 
             <Route exact path="/ads" component={Ads} />
             <Route exact path="/ads" component={Ads} />
@@ -39,17 +42,14 @@ function App() {
             <PrivateRoute exact path="/create-ad" component={AdForm} />
             <PrivateRoute exact path="/ads/:id/edit" component={EditAd} />
 
-            <Route exact path="/messages" component={MessagesList} />
-            <Route exact path="/new-message/:id" component={MessageBox} />
-            <Route exact path="/user-admin" component={UserAdmin} />
-            
+            <Route exact path="/messages/:userId/:adId" component={MessagesList} />
             <Route exact path="/404" component={() => <Error code={404} />} />
             <Route exact path="/403" component={() => <Error code={403} />} />
-
             <Redirect to="/session/register" />
-          </Switch>
-        </div>
-        <Footer/>
+          </div>          
+        </Switch>
+        <Route exact path="/user-admin" component={UserAdmin} />
+        <Footer />
       </AuthStore>
     </Router>
   );

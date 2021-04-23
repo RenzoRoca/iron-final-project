@@ -38,8 +38,6 @@ module.exports.profile = (req, res, next) => {
   User.findById(req.params.id)
       .then(user => {
         if(req.params.id === user.id){
-          console.log('welcome to your profile');
-          debugger
           res.status(200).json(user);
         }else {
           next(createError(403, 'Forbidden'));

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import MessageItem from './MessageItem';
 import MessageService from '../../services/messages-service';
 import { Fragment } from 'react';
@@ -14,6 +15,12 @@ const db = firebase.firestore();
 
 function MessagesList({ minSearchChars }) {
 
+  const { userId, adId } = useParams();
+
+  const handleProceed = (e) => {
+    history.push(`/messages/${userId}/${adId}`);
+  };
+
   const { t } = useTranslation();
   const history = useHistory();
   const { user } = useContext(AuthContext);
@@ -22,20 +29,28 @@ function MessagesList({ minSearchChars }) {
   const [newMessage, setNewMessage] = useState('');
 
   useEffect(() => {
-
-    console.log('fire db => ', db);
-
     if (db) {
-      const unsubscribe = db
-        .collection('messages')
+
+      const messageRef = db.collection('messages');
+
+      const unsubscribe = messageRef
+        .where('author', '==', userId)
+        .where('mention', '==', adId)
         .orderBy('creationDate')
         .limit(100)
         .onSnapshot(querySnapshot => {
-          // Get all documents from collection - with IDs
+          
           const data = querySnapshot.docs.map(doc => ({
             ...doc.data(),
             id: doc.id,
           }));
+
+          console.log('userId: ');
+          console.log(userId);
+          console.log('adId: ');
+          console.log(adId);
+          
+
           console.log('all the data');
           console.log(data);
           // Update state
@@ -57,23 +72,30 @@ function MessagesList({ minSearchChars }) {
     if (db) {
       db.collection('messages').add({
         text: newMessage,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        author: user.id
-        //mention: user.id, // será el autor del ad
-        //photoUrl: user.profileImage
+        creationDate: firebase.firestore.FieldValue.serverTimestamp(),
+        author: userId,
+        mention: adId,
+        photoUrl: user.profileImage
       })
     }
     
     setNewMessage(e.target.value);
   }
 
+  const handleHourMessage = ((message = null) => {
+    if(message.creationDate){
+      return moment({}).seconds(message.creationDate.seconds).format('H:mm:ss');
+    }
+    return '00:00:00';
+  });
+
   return (
     <>
       {messages.map(message => 
         <div key={message.id} className="chat-container">
-        <img src="/w3images/bandmember.jpg" alt="Avatar" />
+        <img src={message.photoUrl} alt="Avatar" />
         <p>{message.text}</p>
-        <span className="time-right">{moment({}).seconds(message.creationDate.seconds).format('H:mm:ss')}</span>
+        <span className="time-right">{ handleHourMessage(message) }</span>
       </div>
       )}
       <div className="row row-cols-1">      

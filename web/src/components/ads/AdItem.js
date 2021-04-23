@@ -35,7 +35,7 @@ function AdItem({ ad: { id, title, image, description, author } }) {
         title={<a href={`/ads/${id}`}>{title}</a>}
         description={
           user.id !== author.id 
-          ? <Link activeclassname="active" to={`/new-message/${id}`}><span >Responder a {author.name}</span></Link> 
+          ? <Link activeclassname="active" to={`/messages/${user.id}/${id}`}><span >Responder a {author.name}</span></Link> 
           : <Link to={`/ads/${id}/edit`}><span >Editar <i className="fa fa-edit"></i></span></Link>
         }
       />

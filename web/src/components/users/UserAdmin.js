@@ -1,5 +1,5 @@
-import React from 'react';
-import { Layout, Menu } from 'antd';
+import React, { useContext } from 'react';
+import { Layout, Menu, PageHeader } from 'antd';
 import {
   AppstoreOutlined,
   BarChartOutlined,
@@ -10,82 +10,81 @@ import {
   UploadOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
+import { AuthContext } from '../../contexts/AuthStore';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import UserDetail from './UserDetail';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 class UserAdmin extends React.Component {
+
+  static contextType = AuthContext;
+
+  constructor(props) {
+    super(props);
+  }
+
   state = {
     collapsed: false,
   };
 
-  toggle = () => {
-    this.setState({
-      collapsed: !this.state.collapsed,
-    });
+  onCollapse = collapsed => {
+    console.log(collapsed);
+    this.setState({ collapsed });
   };
 
   render() {
+    const { user } = this.context;
+    const { collapsed } = this.state;
+
     return (
-        <Layout>
-        <Sider
-          style={{
-            overflow: 'auto',
-            height: '100vh',
-            position: 'fixed',
-            left: 0,
-          }}
-        >
-          <div className="logo" />
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']}>
-            <Menu.Item key="1" icon={<UserOutlined />}>
-              nav 1
+      <Router>
+        <Layout style={{ minHeight: '100vh' }}>
+          <Sider
+            collapsible collapsed={collapsed} onCollapse={this.onCollapse}
+          >
+            <div className="logo" />
+            <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']}>
+              <Menu.Item key="1" icon={<UserOutlined />}>
+                <Link className="stretched-link link-unstyled" to={`/users/${user.id}`}  >Perfil</Link>
+              </Menu.Item>
+              <Menu.Item key="2" icon={<VideoCameraOutlined />}>
+                nav 2
             </Menu.Item>
-            <Menu.Item key="2" icon={<VideoCameraOutlined />}>
-              nav 2
+              <Menu.Item key="3" icon={<UploadOutlined />}>
+                nav 3
             </Menu.Item>
-            <Menu.Item key="3" icon={<UploadOutlined />}>
-              nav 3
+              <Menu.Item key="4" icon={<BarChartOutlined />}>
+                nav 4
             </Menu.Item>
-            <Menu.Item key="4" icon={<BarChartOutlined />}>
-              nav 4
+              <Menu.Item key="5" icon={<CloudOutlined />}>
+                nav 5
             </Menu.Item>
-            <Menu.Item key="5" icon={<CloudOutlined />}>
-              nav 5
+              <Menu.Item key="6" icon={<AppstoreOutlined />}>
+                nav 6
             </Menu.Item>
-            <Menu.Item key="6" icon={<AppstoreOutlined />}>
-              nav 6
+              <Menu.Item key="7" icon={<TeamOutlined />}>
+                nav 7
             </Menu.Item>
-            <Menu.Item key="7" icon={<TeamOutlined />}>
-              nav 7
+              <Menu.Item key="8" icon={<ShopOutlined />}>
+                nav 8
             </Menu.Item>
-            <Menu.Item key="8" icon={<ShopOutlined />}>
-              nav 8
-            </Menu.Item>
-          </Menu>
-        </Sider>
-        <Layout className="site-layout" style={{ marginLeft: 200 }}>
-          <Header className="site-layout-background" style={{ padding: 0 }} />
-          <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-            <div className="site-layout-background" style={{ padding: 24, textAlign: 'center' }}>
-              ...
-              <br />
-              Really
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              long
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              content
-            </div>
-          </Content>          
+            </Menu>
+          </Sider>
+          <Layout  >
+          <PageHeader
+            className="site-page-header"
+            onBack={() => null}
+            title="User Admin View, "
+            subTitle="Admin here data"
+          />            
+            <Content style={{ margin: '24px 16px', padding: 24, background: '#fff' }}>
+              
+              <Route path="/users/:id" component={UserDetail} />
+            </Content>
+          </Layout>
         </Layout>
-      </Layout>
+      </Router>
     );
   }
 }

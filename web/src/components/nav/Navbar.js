@@ -31,7 +31,7 @@ function Navbar() {
             <li className="nav-item"><NavLink className="nav-link" activeClassName="active" to="/users">{t('Navbar.users')}</NavLink></li>
             {isAuthenticated() && (
               <Fragment>
-                <li className="nav-item"><NavLink className="nav-link" activeClassName="active" to="/messages">Messages</NavLink></li>
+                <li className="nav-item"><NavLink className="nav-link" activeClassName="active" to="/ads" >Messages</NavLink></li>
               </Fragment>
             )}
           </ul>
